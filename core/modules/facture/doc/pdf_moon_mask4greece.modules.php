@@ -1291,14 +1291,12 @@ class pdf_moon_mask4greece extends ModelePDFFactures
 
 		if ($object->type != 2) {
 			// Check a payment mode is defined
-			// Στο λεξικό “Τρόποι πληρωμής” το Mydata εισάγει αυτούς της ΑΑΑΔΕ, οπότε προσθέτουμε τον κωδικό '6' που είναι ο αντίστοιχος του default 'VIR'
 			if (empty($object->mode_reglement_code)
 				&& empty($conf->global->FACTURE_CHQ_NUMBER)
 				&& !getDolGlobalInt('FACTURE_RIB_NUMBER')) {
 				$this->error = $outputlangs->transnoentities("ErrorNoPaiementModeConfigured");
 			} elseif (($object->mode_reglement_code == 'CHQ' && empty($conf->global->FACTURE_CHQ_NUMBER) && empty($object->fk_account) && empty($object->fk_bank))
-				|| ($object->mode_reglement_code == 'VIR' && !getDolGlobalInt('FACTURE_RIB_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))
-				|| ($object->mode_reglement_code == '6' && !getDolGlobalInt('FACTURE_RIB_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))) {
+				|| ($object->mode_reglement_code == 'VIR' && !getDolGlobalInt('FACTURE_RIB_NUMBER') && empty($object->fk_account) && empty($object->fk_bank))) {
 				// Avoid having any valid PDF with setup that is not complete
 				$outputlangs->load("errors");
 
@@ -1313,11 +1311,9 @@ class pdf_moon_mask4greece extends ModelePDFFactures
 			}
 
 			// Show payment mode
-			// Στο λεξικό “Τρόποι πληρωμής” το Mydata εισάγει αυτούς της ΑΑΑΔΕ, οπότε προσθέτουμε τον κωδικό '6' που είναι ο αντίστοιχος του default 'VIR'
 			if (!empty($object->mode_reglement_code)
 				&& $object->mode_reglement_code != 'CHQ'
-				&& $object->mode_reglement_code != 'VIR'
-				&& $object->mode_reglement_code != '6') {
+				&& $object->mode_reglement_code != 'VIR') {
 				$pdf->SetFont('', 'B', $default_font_size - 2);
 				$pdf->SetXY($this->marge_gauche, $posy);
 				$titre = $outputlangs->transnoentities("PaymentMode").':';
@@ -1426,8 +1422,7 @@ class pdf_moon_mask4greece extends ModelePDFFactures
 			}
 
 					// If payment mode not forced or forced to VIR, show payment with BAN
-			// Στο λεξικό “Τρόποι πληρωμής” το Mydata εισάγει αυτούς της ΑΑΑΔΕ, οπότε προσθέτουμε τον κωδικό '6' που είναι ο αντίστοιχος του default 'VIR'
-			if (empty($object->mode_reglement_code) || $object->mode_reglement_code == 'VIR' || $object->mode_reglement_code == '6') {
+			if (empty($object->mode_reglement_code) || $object->mode_reglement_code == 'VIR') {
 				if ($object->fk_account > 0 || $object->fk_bank > 0 || getDolGlobalInt('FACTURE_RIB_NUMBER')) {
 					$bankid = ($object->fk_account <= 0 ? $conf->global->FACTURE_RIB_NUMBER : $object->fk_account);
 					if ($object->fk_bank > 0) {
